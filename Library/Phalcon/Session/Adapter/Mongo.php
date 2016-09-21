@@ -18,6 +18,10 @@
 */
 namespace Phalcon\Session\Adapter;
 
+use DateInterval;
+use DateTime;
+use MongoDB\BSON\UTCDateTime;
+use MongoDB\Collection;
 use Phalcon\Session\Adapter;
 use Phalcon\Session\AdapterInterface;
 use Phalcon\Session\Exception;
@@ -110,11 +114,11 @@ class Mongo extends Adapter implements AdapterInterface
 
         $sessionData = [
             '_id'      => $sessionId,
-            'modified' => new \MongoDate(),
+            'modified' => new UTCDateTime(time() * 1000),
             'data'     => $sessionData
         ];
 
-        $this->getCollection()->save($sessionData);
+        $this->getCollection()->updateOne(['_id' => $sessionData['_id']], ['$set' => $sessionData ], ['upsert' => true]);
 
         return true;
     }
@@ -130,7 +134,7 @@ class Mongo extends Adapter implements AdapterInterface
 
         $this->data = null;
 
-        $remove = $this->getCollection()->remove(['_id' => $sessionId]);
+        $remove = $this->getCollection()->deleteOne(['_id' => $sessionId]);
 
         return (bool) $remove['ok'];
     }
@@ -141,18 +145,18 @@ class Mongo extends Adapter implements AdapterInterface
      */
     public function gc($maxLifetime)
     {
-        $minAge = new \DateTime();
-        $minAge->sub(new \DateInterval('PT' . $maxLifetime . 'S'));
-        $minAgeMongo = new \MongoDate($minAge->getTimestamp());
+        $minAge = new DateTime();
+        $minAge->sub(new DateInterval('PT' . $maxLifetime . 'S'));
+        $minAgeMongo = new UTCDateTime($minAge->getTimestamp() * 1000);
 
         $query = ['modified' => ['$lte' => $minAgeMongo]];
-        $remove = $this->getCollection()->remove($query);
+        $remove = $this->getCollection()->deleteOne($query);
 
         return (bool) $remove['ok'];
     }
 
     /**
-     * @return \MongoCollection
+     * @return Collection
      */
     protected function getCollection()
     {
