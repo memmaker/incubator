@@ -1,5 +1,5 @@
 {
-    "name": "phalcon/incubator",
+    "name": "memmaker/incubator",
     "type": "library",
     "description": "Adapters, prototypes or functionality that can be potentially incorporated to the C-framework.",
     "keywords": ["framework", "phalcon", "incubator"],
@@ -14,6 +14,10 @@
         {
             "name": "Contributors",
             "homepage": "https://github.com/phalcon/incubator/graphs/contributors"
+        },
+        {
+            "name": "Felix Ruzzoli",
+            "homepage": "https://lrx-solutions.de"
         }
     ],
     "support": {
