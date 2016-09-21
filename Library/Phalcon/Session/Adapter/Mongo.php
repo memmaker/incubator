@@ -22,6 +22,7 @@ use DateInterval;
 use DateTime;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Collection;
+use MongoDB\DeleteResult;
 use Phalcon\Session\Adapter;
 use Phalcon\Session\AdapterInterface;
 use Phalcon\Session\Exception;
@@ -134,9 +135,10 @@ class Mongo extends Adapter implements AdapterInterface
 
         $this->data = null;
 
+        /** @var DeleteResult $remove */
         $remove = $this->getCollection()->deleteOne(['_id' => $sessionId]);
 
-        return (bool) $remove['ok'];
+        return $remove->isAcknowledged();
     }
 
     /**
@@ -150,9 +152,10 @@ class Mongo extends Adapter implements AdapterInterface
         $minAgeMongo = new UTCDateTime($minAge->getTimestamp() * 1000);
 
         $query = ['modified' => ['$lte' => $minAgeMongo]];
+        /** @var DeleteResult $remove */
         $remove = $this->getCollection()->deleteOne($query);
 
-        return (bool) $remove['ok'];
+        return $remove->isAcknowledged();
     }
 
     /**
