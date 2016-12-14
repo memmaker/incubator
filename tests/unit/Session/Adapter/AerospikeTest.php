@@ -47,8 +47,8 @@ class AerospikeTest extends Test
 
         $this->getModule('Aerospike')->_reconfigure([
             'set'  => $this->set,
-            'addr' => TEST_AS_HOST,
-            'port' => TEST_AS_PORT
+            'addr' => env('TEST_AS_HOST', '127.0.0.1'),
+            'port' => env('TEST_AS_PORT', 3000)
         ]);
     }
 
@@ -65,16 +65,14 @@ class AerospikeTest extends Test
         $sessionId = 'abcdef123458';
         $session = new SessionHandler($this->getConfig());
 
-        $data = serialize(
-            [
+        $data = [
                 321   => microtime(true),
                 'def' => '678',
                 'xyz' => 'zyx'
-            ]
-        );
+            ];
 
         $this->assertTrue($session->write($sessionId, $data));
-        $this->tester->seeInAerospike($sessionId, serialize($data));
+        $this->tester->seeInAerospike($sessionId, $data);
     }
 
     public function testShouldReadSession()
@@ -82,15 +80,13 @@ class AerospikeTest extends Test
         $sessionId = 'some_session_key';
         $session = new SessionHandler($this->getConfig());
 
-        $data = serialize(
-            [
+        $data = [
                 321   => microtime(true),
                 'def' => '678',
                 'xyz' => 'zyx'
-            ]
-        );
+            ];
 
-        $this->tester->haveInAerospike($sessionId, serialize($data));
+        $this->tester->haveInAerospike($sessionId, $data);
         $this->keys[] = $sessionId;
 
         $this->assertEquals($data, $session->read($sessionId));
@@ -101,15 +97,13 @@ class AerospikeTest extends Test
         $sessionId = 'abcdef123457';
         $session = new SessionHandler($this->getConfig());
 
-        $data = serialize(
-            [
+        $data = [
                 'abc' => 345,
                 'def' => ['foo' => 'bar'],
                 'zyx' => 'xyz'
-            ]
-        );
+            ];
 
-        $this->tester->haveInAerospike($sessionId, serialize($data));
+        $this->tester->haveInAerospike($sessionId, $data);
         $session->destroy($sessionId);
         $this->tester->dontSeeInAerospike($sessionId);
     }
@@ -119,7 +113,7 @@ class AerospikeTest extends Test
         $aerospike = new Aerospike(
             [
                 'hosts' => [
-                    ['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]
+                    ['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]
                 ]
             ],
             false
@@ -144,7 +138,7 @@ class AerospikeTest extends Test
     {
         return [
             'hosts' => [
-                ['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]
+                ['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]
             ],
             'persistent' => false,
             'namespace'  => $this->ns,

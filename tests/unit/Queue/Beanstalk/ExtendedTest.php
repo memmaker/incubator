@@ -48,21 +48,17 @@ class ExtendedTest extends Test
      */
     protected function _before()
     {
-        if (!defined('TEST_BT_HOST') || !defined('TEST_BT_PORT')) {
-            $this->markTestSkipped('TEST_BT_HOST and/or TEST_BT_PORT env variables are not defined');
-        }
-
         $this->client = new Extended([
-            'host'   => TEST_BT_HOST,
-            'port'   => TEST_BT_PORT,
+            'host'   => env('TEST_BT_HOST', 6379),
+            'port'   => env('TEST_BT_PORT', 11300),
             'prefix' => 'PHPUnit_',
         ]);
 
         if (!$this->client->connect()) {
             $this->markTestSkipped(sprintf(
                 'Need a running beanstalkd server at %s:%d',
-                TEST_BT_HOST,
-                TEST_BT_PORT
+                env('TEST_BT_HOST', 6379),
+                env('TEST_BT_PORT', 11300)
             ));
         }
 
@@ -123,10 +119,10 @@ class ExtendedTest extends Test
      */
     public function testShouldDoWork()
     {
-        if (!class_exists('\duncan3dc\Helpers\Fork')) {
+        if (!class_exists('\duncan3dc\Helpers\Fork') && !class_exists('\duncan3dc\Forker\Fork')) {
             $this->markTestSkipped(sprintf(
-                '%s used as a dependency \duncan3dc\Helpers\Fork. You can install it by using' .
-                'composer require "duncan3dc/fork-helper":"*"',
+                '%s uses fork-helper as a dependency. You can install it by running: ' .
+                'composer require duncan3dc/fork-helper',
                 get_class($this->client)
             ));
         }
@@ -144,7 +140,13 @@ class ExtendedTest extends Test
             'test-tube-2' => '2',
         ];
 
-        $fork = new \duncan3dc\Helpers\Fork();
+        // Check if we are using Fork1.0 (php < 7)
+        if (class_exists('duncan3dc\Helpers\Fork')) {
+            $fork = new \duncan3dc\Helpers\Fork;
+        } else {
+            $fork = new \duncan3dc\Forker\Fork;
+        }
+
         $fork->call(function () use ($expected) {
             foreach ($expected as $tube => $value) {
                 $this->client->addWorker($tube, function (Job $job) {

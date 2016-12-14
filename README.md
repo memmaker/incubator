@@ -1,10 +1,10 @@
+# Phalcon Incubator
+
 [![Build Status](https://img.shields.io/travis/phalcon/incubator/master.svg?style=flat-square)](https://travis-ci.org/phalcon/incubator)
 [![Latest Version](https://img.shields.io/packagist/v/phalcon/incubator.svg?style=flat-square)](https://github.com/phalcon/incubator/releases)
-[![Software License](https://img.shields.io/badge/license-BSD--3-brightgreen.svg?style=flat-square)](docs/LICENSE.md)
+[![Software License](https://img.shields.io/badge/license-BSD--3-brightgreen.svg?style=flat-square)](https://github.com/phalcon/incubator/blob/master/LICENSE.txt)
 [![Total Downloads](https://img.shields.io/packagist/dt/phalcon/incubator.svg?style=flat-square)](https://packagist.org/packages/phalcon/incubator)
 [![Daily Downloads](https://img.shields.io/packagist/dd/phalcon/incubator.svg?style=flat-square)](https://packagist.org/packages/phalcon/incubator)
-
-# Phalcon Incubator
 
 Phalcon is a web framework delivered as a C extension providing high performance and lower resource consumption.
 
@@ -29,7 +29,7 @@ Then create the `composer.json` file as follows:
 ```json
 {
     "require": {
-        "phalcon/incubator": "~3.0"
+        "phalcon/incubator": "^3.0"
     }
 }
 ```
@@ -81,13 +81,9 @@ $loader->registerNamespaces([
 $loader->register();
 ```
 
-## Testing
-
-See [TESTING.md](docs/TESTING.md)
-
 # Contributing
 
-See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
+See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Contributions Index
 
@@ -171,6 +167,7 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ### Translate
 * [Phalcon\Translate\Adapter\Database](Library/Phalcon/Translate/Adapter) - Translation adapter using relational databases (@phalcon)
+* [Phalcon\Translate\Adapter\Mongo](Library/Phalcon/Translate/Adapter) - Implements a Mongo adapter for translations (@gguridi)
 * [Phalcon\Translate\Adapter\ResourceBundle](Library/Phalcon/Translate/Adapter) - Translation adapter using ResourceBundle (@phalcon)
 
 ### Session
@@ -191,6 +188,11 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 * [Phalcon\Validation\Validator\MongoId](Library/Phalcon/Validation/Validator) - Validate MongoId value (@Kachit)
 * [Phalcon\Validation\Validator\PasswordStrength](Library/Phalcon/Validation/Validator) - Validates password strength (@davihu)
 
+### Traits
+
+* [Phalcon\Traits\ConfigurableTrait](Library/Phalcon/Traits) - Allows to define parameters which can be set by passing them to the class constructor (@sergeyklay)
+
 ## License
 
-Incubator is open-sourced software licensed under the [New BSD License](docs/LICENSE.md). © Phalcon Framework Team and contributors
+Incubator is open-sourced software licensed under the [New BSD License](https://github.com/phalcon/incubator/blob/master/LICENSE.txt).<br>
+© 2011-2016, Phalcon Framework Team
