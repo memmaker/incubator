@@ -90,8 +90,7 @@ class Mongo extends Adapter implements AdapterInterface
      */
     public function read($sessionId)
     {
-        $sessionData = $this->getCollection()->findOne(['_id' => $sessionId]);
-
+        $sessionData = $this->getCollection()->findOneAndUpdate(['_id' => $sessionId], ['$set' => ['modified' => new UTCDateTime(time() * 1000)]]);
         if (!isset($sessionData['data'])) {
             return '';
         }
