@@ -132,13 +132,13 @@ class Mongo extends Adapter implements AdapterInterface
     public function destroy($sessionId = null)
     {
         if (is_null($sessionId)) {
-            $sessionId =$this->getId();
+            $sessionId = $this->getId();
         }
 
         $this->data = null;
 
         /** @var DeleteResult $remove */
-        $remove = $this->getCollection()->deleteOne(['_id' => $sessionId]);
+        $remove = $this->getCollection()->deleteMany(['_id' => $sessionId]);
 
         return $remove->isAcknowledged();
     }
