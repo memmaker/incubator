@@ -138,7 +138,7 @@ class Mongo extends Adapter implements AdapterInterface
         $this->data = null;
 
         /** @var DeleteResult $remove */
-        $remove = $this->getCollection()->deleteMany(['_id' => $sessionId]);
+        $remove = $this->getCollection()->deleteOne(['_id' => $sessionId]);
 
         return $remove->isAcknowledged();
     }
@@ -155,7 +155,7 @@ class Mongo extends Adapter implements AdapterInterface
 
         $query = ['modified' => ['$lte' => $minAgeMongo]];
         /** @var DeleteResult $remove */
-        $remove = $this->getCollection()->deleteOne($query);
+        $remove = $this->getCollection()->deleteMany($query);
 
         return $remove->isAcknowledged();
     }
